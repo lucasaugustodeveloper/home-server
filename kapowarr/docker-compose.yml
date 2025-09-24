@@ -1,0 +1,14 @@
+name: Kapowarr
+
+services:
+    kapowarr:
+        image: mrcas/kapowarr:latest
+        volumes:
+            - kapowarr:/app/db
+            - $HOME/home_server/kapowarr:/app/temp_downloads
+            - $HOME/home_server/kapowarr/comics:/comics-1
+        ports:
+            - 5656:5656
+
+volumes:
+    kapowarr:
