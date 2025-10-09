@@ -1,0 +1,63 @@
+services:
+    app:
+        image: nextcloud
+        container_name: nextcloud
+        ports:
+            - 8080:80
+        volumes:
+            - nextcloud:/var/www/html
+        environment:
+            - MYSQL_USER=nextcloud
+            - MYSQL_PASSWORD=nextcloud
+            - MYSQL_DATABASE=nextcloud
+            - MYSQL_HOST=db
+        links:
+            - db
+        depends_on:
+            - db
+        networks:
+            - nextcloud
+        mem_limit: 4GB
+        cpus: 1
+        restart: unless-stopped
+
+    db:
+        image: mariadb:12
+        container_name: db-nextcloud
+        command: --transaction-isolation=READ-COMMITTED --log-bin=binlog
+        volumes:
+            - db:/var/lib/mysql
+        environment:
+            - MARIADB_ROOT_PASSWORD=nextcloud
+            - MARIADB_USER=nextcloud
+            - MARIADB_PASSWORD=nextcloud
+            - MARIADB_DATABASE=nextcloud
+        networks:
+            - nextcloud
+        mem_limit: 1GB
+        cpus: 0.5
+        restart: unless-stopped
+
+    postgres:
+        image: postgres:18
+        container_name: postgres-nextcloud
+        volumes:
+            - postgres:/var/lib/mysql
+        environment:
+            - POSTGRES_USER=nextcloud
+            - POSTGRES_PASSWORD=nextcloud
+            - POSTGRES_DATABASE=nextcloud
+        networks:
+            - nextcloud
+        mem_limit: 1GB
+        cpus: 0.5
+        restart: unless-stopped
+
+volumes:
+    nextcloud:
+    db:
+    postgres:
+
+networks:
+    nextcloud:
+        external: false
