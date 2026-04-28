@@ -1,0 +1,20 @@
+services:
+    plex:
+        container_name: media-plex
+        image: plexinc/pms-docker:latest
+        environment:
+            - TZ = America/Sao_Paulo
+            - PUID = 1000
+            - PGID = 1000
+            - VA_DRIVER = IHD
+            - PLEX_HW_TRANS_MAX = 16
+        volumes:
+            - $HOME/home_media/plex/config:/config
+            - $HOME/home_media/plex/data:/data
+            - $HOME/home_media/plex/transcode:/transcode
+            - $HOME/HomeMedia/Animes:/Animes
+            - $HOME/HomeMedia/Movies:/Movies
+        devices:
+            - /dev/dri:/dev/dri
+            - /dev/bus/usb:/dev/bus/usb
+        network_mode: host
